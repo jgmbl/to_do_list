@@ -1,17 +1,17 @@
 package pl.jgmbl.to_do_list_backend.names;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
 
 @Service
 public class NamesService {
     private final NamesRepository namesRepository;
-    private final Names names;
 
-    public NamesService(NamesRepository namesRepository, Names names) {
+    public NamesService(NamesRepository namesRepository) {
         this.namesRepository = namesRepository;
-        this.names = names;
     }
 
     protected Iterable<Names> getAllNames() {
@@ -22,14 +22,20 @@ public class NamesService {
         return namesRepository.findById(id);
     }
 
-    protected boolean isNewNameAdded (Names name) {
-        Names newName = new Names();
-        if (name.getName() != null || !name.getName().isBlank()) {
-            newName.setName(name.getName());
-            namesRepository.save(newName);
-            return true;
-        } else {
-            return false;
-        }
+    protected Object[] addNewName(Names name) {
+        // save new object to database
+        Names savedName = namesRepository.save(name);
+
+        // create new full URL for POST request
+        URI nameUri = ServletUriComponentsBuilder.fromCurrentRequest() // get informations about current host, port etc.
+                .path("/{id}") // add path to the request
+                .buildAndExpand(savedName.getId()) // add savedName id value to path
+                .toUri(); // new full URL for request
+
+        Object[] savedNameAndNameUri = new Object[2];
+        savedNameAndNameUri[0] = savedName;
+        savedNameAndNameUri[1] = nameUri;
+
+        return savedNameAndNameUri;
     }
 }
