@@ -3,7 +3,7 @@ package pl.jgmbl.to_do_list_backend.names;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.rmi.ServerException;
+import java.net.URI;
 import java.util.Optional;
 
 @RestController
@@ -23,7 +23,7 @@ public class NamesController {
     }
 
     @GetMapping("/names/{id}")
-    public ResponseEntity<Names> displayNameById (@RequestParam(name = "id") Integer id) {
+    public ResponseEntity<Names> displayNameById(@PathVariable Integer id) {
         Optional<Names> nameById = namesService.getNameById(id);
 
         return nameById
@@ -33,12 +33,11 @@ public class NamesController {
 
     @PostMapping("/names")
     public ResponseEntity<Names> createName(@RequestBody Names name) {
-        boolean newNameAdded = namesService.isNewNameAdded(name);
+        Object[] nameAndUri = namesService.addNewName(name);
 
-        if (!newNameAdded) {
-            return ResponseEntity.badRequest().build();
-        }
+        Names savedName = (Names) nameAndUri[0];
+        URI uri = (URI) nameAndUri[1];
 
-        return ResponseEntity.created().body(name);
+        return ResponseEntity.created(uri).body(savedName);
     }
 }
