@@ -1,9 +1,11 @@
 package pl.jgmbl.to_do_list_backend.tasks;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 public class TasksController {
@@ -29,5 +31,19 @@ public class TasksController {
         }
 
         return ResponseEntity.ok(tasksByNameId);
+    }
+
+    @PostMapping("/tasks")
+    public ResponseEntity<Object> postNameByNameId(@RequestBody Tasks tasks) {
+        try {
+            Object[] newTask = tasksService.addNewTask(tasks);
+
+            Tasks savedTask = (Tasks) newTask[0];
+            URI uri = (URI) newTask[1];
+
+            return ResponseEntity.created(uri).body(savedTask);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Given name id does not exist.");
+        }
     }
 }
