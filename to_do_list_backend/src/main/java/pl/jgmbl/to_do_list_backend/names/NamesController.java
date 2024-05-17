@@ -18,14 +18,14 @@ public class NamesController {
     }
 
     @GetMapping("/names")
-    public ResponseEntity<Iterable<Names>> displayAllNames() {
+    public ResponseEntity<Iterable<Names>> getAllNames() {
         Iterable<Names> allNames = namesService.getAllNames();
 
         return ResponseEntity.ok(allNames);
     }
 
     @GetMapping("/names/{id}")
-    public ResponseEntity<Names> displayNameById(@PathVariable Integer id) {
+    public ResponseEntity<Names> getNameById(@PathVariable Integer id) {
         Optional<Names> nameById = namesService.getNameById(id);
 
         return nameById
@@ -34,7 +34,7 @@ public class NamesController {
     }
 
     @PostMapping("/names")
-    public ResponseEntity<Object> createName(@RequestBody Names name) {
+    public ResponseEntity<Object> postName(@RequestBody Names name) {
         try {
             Object[] nameAndUri = namesService.addNewName(name);
 
@@ -45,5 +45,16 @@ public class NamesController {
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Name should be unique.");
         }
+    }
+
+    @DeleteMapping("/names/{id}")
+    public ResponseEntity<Void> deleteName(@PathVariable Integer id) {
+        boolean nameDeleted = namesService.isNameDeleted(id);
+
+        if (!nameDeleted) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
     }
 }
