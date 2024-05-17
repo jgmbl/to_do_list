@@ -34,7 +34,7 @@ public class TasksService {
         Tasks savedTask = tasksRepository.save(tasks);
 
         URI nameIdUri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/idd")
+                .path("/id")
                 .buildAndExpand(savedTask.getNames().getId())
                 .toUri();
 
@@ -43,6 +43,15 @@ public class TasksService {
         savedTaskAndNameUri[1] = nameIdUri;
 
         return savedTaskAndNameUri;
+    }
+
+    protected boolean isTaskDeleted(Integer taskId) {
+        if (!tasksRepository.existsById(taskId)) {
+            return false;
+        } else {
+            tasksRepository.deleteById(taskId);
+            return true;
+        }
     }
 
     private Optional<Names> doesNameIdExists(Integer nameId) {
