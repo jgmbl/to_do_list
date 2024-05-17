@@ -1,5 +1,7 @@
 package pl.jgmbl.to_do_list_backend.names;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +34,16 @@ public class NamesController {
     }
 
     @PostMapping("/names")
-    public ResponseEntity<Names> createName(@RequestBody Names name) {
-        Object[] nameAndUri = namesService.addNewName(name);
+    public ResponseEntity<Object> createName(@RequestBody Names name) {
+        try {
+            Object[] nameAndUri = namesService.addNewName(name);
 
-        Names savedName = (Names) nameAndUri[0];
-        URI uri = (URI) nameAndUri[1];
+            Names savedName = (Names) nameAndUri[0];
+            URI uri = (URI) nameAndUri[1];
 
-        return ResponseEntity.created(uri).body(savedName);
+            return ResponseEntity.created(uri).body(savedName);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Name should be unique.");
+        }
     }
 }
