@@ -38,4 +38,13 @@ public class NamesService {
 
         return savedNameAndNameUri;
     }
+
+    protected boolean isNameDeleted(Integer id) {
+        if (namesRepository.existsById(id)) {
+            namesRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
