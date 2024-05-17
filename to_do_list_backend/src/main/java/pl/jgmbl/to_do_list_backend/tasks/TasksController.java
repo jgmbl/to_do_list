@@ -34,7 +34,7 @@ public class TasksController {
     }
 
     @PostMapping("/tasks")
-    public ResponseEntity<Object> postNameByNameId(@RequestBody Tasks tasks) {
+    public ResponseEntity<Object> postTask(@RequestBody Tasks tasks) {
         try {
             Object[] newTask = tasksService.addNewTask(tasks);
 
@@ -45,5 +45,16 @@ public class TasksController {
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Given name id does not exist.");
         }
+    }
+
+    @DeleteMapping("/tasks/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Integer taskId) {
+        boolean taskDeleted = tasksService.isTaskDeleted(taskId);
+
+        if (!taskDeleted) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
     }
 }
