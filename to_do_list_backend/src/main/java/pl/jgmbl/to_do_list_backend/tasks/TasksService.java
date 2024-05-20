@@ -23,7 +23,7 @@ public class TasksService {
     }
 
     protected Iterable<Tasks> getTasksByNameId(Integer nameId) {
-        Optional<Names> names = doesNameIdExists(nameId);
+        Optional<Names> names = namesRepository.findById(nameId);
         if (names.isEmpty()) {
             return null;
         }
@@ -52,9 +52,5 @@ public class TasksService {
             tasksRepository.deleteById(taskId);
             return true;
         }
-    }
-
-    private Optional<Names> doesNameIdExists(Integer nameId) {
-        return namesRepository.findById(nameId);
     }
 }
