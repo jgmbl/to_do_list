@@ -10,6 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
@@ -40,6 +41,7 @@ class NamesControllerUnitTest {
 
     @Test
     void getNameById() {
+        when(namesService.getNameById(1)).thenReturn(Optional.of(names));
     }
 
     @Test
@@ -48,5 +50,14 @@ class NamesControllerUnitTest {
 
     @Test
     void deleteName() {
+    }
+
+    private Names nameBuilder() {
+        Names name = Names.builder()
+                .id(1)
+                .name("XYZ")
+                .build();
+
+        return name;
     }
 }
