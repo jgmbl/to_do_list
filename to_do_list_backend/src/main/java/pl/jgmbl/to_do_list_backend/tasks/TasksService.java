@@ -45,6 +45,16 @@ public class TasksService {
         return savedTaskAndNameUri;
     }
 
+    protected Optional<Tasks> updateTaskContent(Integer taskId, Tasks tasks) {
+        return tasksRepository.findById(taskId)
+                .map(currentTask -> {
+                    if (currentTask.getContent() != null) {
+                        currentTask.setContent(tasks.getContent());
+                    }
+                    return tasksRepository.save(currentTask);
+                });
+    }
+
     protected boolean isTaskDeleted(Integer taskId) {
         if (!tasksRepository.existsById(taskId)) {
             return false;
