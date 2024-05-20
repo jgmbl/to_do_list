@@ -10,7 +10,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
@@ -29,7 +28,8 @@ class NamesControllerUnitTest {
 
     @Test
     void getAllNames() throws Exception {
-        when(namesService.getAllNames()).thenReturn(Collections.singletonList(new Names()));
+        Names name = nameBuilder();
+        when(namesService.getAllNames()).thenReturn(Collections.singletonList(name));
 
         mockMvc.perform(get("/names"))
                 .andDo(print())
@@ -41,7 +41,7 @@ class NamesControllerUnitTest {
 
     @Test
     void getNameById() {
-        when(namesService.getNameById(1)).thenReturn(Optional.of(names));
+//        when(namesService.getNameById(1)).thenReturn(Optional.of(names));
     }
 
     @Test
