@@ -9,8 +9,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 
@@ -45,6 +45,15 @@ class NamesServiceUnitTest {
 
     @Test
     void getNameById() {
+        Names names = new Names(1, "XYZ");
+
+        when(namesRepository.findById(1)).thenReturn(Optional.of(names));
+        Optional<Names> nameById = namesService.getNameById(1);
+        Names nameById1 = nameById.orElse(new Names());
+
+        Assertions.assertNotEquals(nameById, null);
+        Assertions.assertEquals(nameById1.getId(), 1);
+        Assertions.assertEquals(nameById1.getName(), "XYZ");
     }
 
     @Test
