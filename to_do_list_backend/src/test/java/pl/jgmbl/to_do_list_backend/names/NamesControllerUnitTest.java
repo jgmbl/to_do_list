@@ -10,8 +10,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -40,8 +42,17 @@ class NamesControllerUnitTest {
     }
 
     @Test
-    void getNameById() {
-//        when(namesService.getNameById(1)).thenReturn(Optional.of(names));
+    void getNameById() throws Exception {
+        Names name = nameBuilder();
+        when(namesService.getNameById(1)).thenReturn(Optional.ofNullable(name));
+
+        mockMvc.perform(get("/names/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is("XYZ")))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$").isNotEmpty());
     }
 
     @Test
