@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 public class TasksController {
@@ -45,6 +46,15 @@ public class TasksController {
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Given name id does not exist.");
         }
+    }
+
+    @PatchMapping("/tasks/{taskId}")
+    public ResponseEntity<Tasks> patchTask(@PathVariable Integer taskId, @RequestBody Tasks tasks) {
+        Optional<Tasks> updatedTaskContent = tasksService.updateTaskContent(taskId, tasks);
+
+        return updatedTaskContent
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/tasks/{taskId}")
