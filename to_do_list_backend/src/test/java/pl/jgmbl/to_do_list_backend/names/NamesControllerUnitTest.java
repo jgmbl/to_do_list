@@ -3,7 +3,6 @@ package pl.jgmbl.to_do_list_backend.names;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,8 +18,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -73,10 +71,10 @@ class NamesControllerUnitTest {
 
         when(namesService.addNewName(any(Names.class))).thenReturn(nameAndUri);
         mockMvc.perform(
-                post("/names")
-                        .content(objectMapper.writeValueAsString(newName))
-                        .contentType(MediaType.APPLICATION_JSON)
-        )
+                        post("/names")
+                                .content(objectMapper.writeValueAsString(newName))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -86,7 +84,14 @@ class NamesControllerUnitTest {
     }
 
     @Test
-    void deleteName() {
+    void deleteName() throws Exception {
+        Names name = nameBuilder();
+
+        when(namesService.isNameDeleted(name.getId())).thenReturn(true);
+
+        mockMvc.perform(delete("/names/1"))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 
     private Names nameBuilder() {
