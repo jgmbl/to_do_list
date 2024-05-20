@@ -14,6 +14,11 @@ public class Names {
     private Integer id;
     private String name;
 
+    public Names(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Names() {
     }
 
