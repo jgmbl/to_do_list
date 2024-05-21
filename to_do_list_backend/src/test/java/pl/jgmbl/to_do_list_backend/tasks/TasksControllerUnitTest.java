@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.jgmbl.to_do_list_backend.names.Names;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +25,7 @@ class TasksControllerUnitTest {
 
     @Test
     void getAllTasks() {
+
     }
 
     @Test
@@ -40,5 +42,20 @@ class TasksControllerUnitTest {
 
     @Test
     void deleteTask() {
+    }
+
+    private Tasks taskBuilder() {
+        Names name = Names.builder()
+                .id(1)
+                .name("XYZ")
+                .build();
+
+        Tasks tasks = Tasks.builder()
+                .id(1)
+                .names(name)
+                .content("ABC")
+                .build();
+
+        return tasks;
     }
 }
