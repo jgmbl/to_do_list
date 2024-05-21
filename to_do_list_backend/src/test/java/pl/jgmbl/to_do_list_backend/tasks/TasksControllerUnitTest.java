@@ -12,13 +12,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.jgmbl.to_do_list_backend.names.Names;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -58,7 +61,7 @@ class TasksControllerUnitTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                // JSON response is a table
+                // first record 0
                 .andExpect(jsonPath("$[0].id", Matchers.is(1)))
                 .andExpect(jsonPath("$[0].names.id", Matchers.is(task.getNames().getId())))
                 .andExpect(jsonPath("$[0].names.name", Matchers.is(task.getNames().getName())))
@@ -67,7 +70,27 @@ class TasksControllerUnitTest {
     }
 
     @Test
-    void postTask() {
+    void postTask() throws Exception {
+        Tasks newTask = taskBuilder();
+        Object[] taskAndUri = new Object[2];
+        URI uri = URI.create("/tasks/1");
+        taskAndUri[0] = newTask;
+        taskAndUri[1] = uri;
+
+        when(tasksService.addNewTask(any(Tasks.class))).thenReturn(taskAndUri);
+        mockMvc.perform(
+                        post("/tasks")
+                                .content(objectMapper.writeValueAsString(newTask))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", Matchers.is(1)))
+                .andExpect(jsonPath("$.names.id", Matchers.is(newTask.getNames().getId())))
+                .andExpect(jsonPath("$.names.name", Matchers.is(newTask.getNames().getName())))
+                .andExpect(jsonPath("$.content", Matchers.is("ABC")))
+                .andExpect(jsonPath("$").isNotEmpty());
     }
 
     @Test
