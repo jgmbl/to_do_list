@@ -6,11 +6,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.jgmbl.to_do_list_backend.names.Names;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(TasksController.class)
@@ -24,8 +31,17 @@ class TasksControllerUnitTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void getAllTasks() {
+    void getAllTasks() throws Exception {
+        Tasks task = taskBuilder();
 
+        when(tasksService.getAllTasks()).thenReturn(Collections.singletonList(task));
+
+        mockMvc.perform(get("/tasks"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$").isArray());
     }
 
     @Test
