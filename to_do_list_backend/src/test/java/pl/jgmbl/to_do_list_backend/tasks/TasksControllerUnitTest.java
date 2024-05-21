@@ -1,6 +1,7 @@
 package pl.jgmbl.to_do_list_backend.tasks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.jgmbl.to_do_list_backend.names.Names;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
@@ -45,7 +48,22 @@ class TasksControllerUnitTest {
     }
 
     @Test
-    void getTasksByNameId() {
+    void getTasksByNameId() throws Exception {
+        Tasks task = taskBuilder();
+        List<Tasks> tasksList = Arrays.asList(task);
+
+        when(tasksService.getTasksByNameId(1)).thenReturn(tasksList);
+
+        mockMvc.perform(get("/tasks/{nameId}", 1))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                // JSON response is a table
+                .andExpect(jsonPath("$[0].id", Matchers.is(1)))
+                .andExpect(jsonPath("$[0].names.id", Matchers.is(task.getNames().getId())))
+                .andExpect(jsonPath("$[0].names.name", Matchers.is(task.getNames().getName())))
+                .andExpect(jsonPath("$[0].content", Matchers.is("ABC")))
+                .andExpect(jsonPath("$").isNotEmpty());
     }
 
     @Test
