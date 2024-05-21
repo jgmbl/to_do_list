@@ -20,8 +20,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -87,8 +86,8 @@ class TasksControllerUnitTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", Matchers.is(1)))
-                .andExpect(jsonPath("$.names.id", Matchers.is(newTask.getNames().getId())))
-                .andExpect(jsonPath("$.names.name", Matchers.is(newTask.getNames().getName())))
+                .andExpect(jsonPath("$.names.id", Matchers.is(1)))
+                .andExpect(jsonPath("$.names.name", Matchers.is("XYZ")))
                 .andExpect(jsonPath("$.content", Matchers.is("ABC")))
                 .andExpect(jsonPath("$").isNotEmpty());
     }
@@ -98,7 +97,13 @@ class TasksControllerUnitTest {
     }
 
     @Test
-    void deleteTask() {
+    void deleteTask() throws Exception {
+        Tasks task = taskBuilder();
+
+        when(tasksService.isTaskDeleted(task.getId())).thenReturn(true);
+        mockMvc.perform(delete("/tasks/1"))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 
     private Tasks taskBuilder() {
