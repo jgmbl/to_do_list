@@ -3,8 +3,11 @@ package pl.jgmbl.to_do_list_backend.names;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -12,9 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
+@SpringBootTest
 class NamesServiceUnitTest {
 
     @Mock
@@ -58,6 +62,25 @@ class NamesServiceUnitTest {
 
     @Test
     void addNewName() {
+        Names newName = new Names(1, "XYZ");
+        Names savedName = new Names(1, "XYZ");
+
+        //mock
+        when(namesRepository.save(newName)).thenReturn(savedName);
+
+        Object[] nameObjects = namesService.addNewName(newName);
+
+        Mockito.verify(namesRepository, times(1)).save(newName);
+
+        // get mocked argument Names by argumentCaptor method
+        ArgumentCaptor<Names> namesArgumentCaptor = ArgumentCaptor.forClass(Names.class);
+        // capture gets value of argument saved in repository
+        verify(namesRepository).save(namesArgumentCaptor.capture());
+        Names createdName = namesArgumentCaptor.getValue();
+        Assertions.assertNotNull(createdName.getId());
+        Assertions.assertEquals("XYZ", createdName.getName());
+
+
     }
 
     @Test
