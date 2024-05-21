@@ -85,5 +85,20 @@ class NamesServiceUnitTest {
 
     @Test
     void isNameDeleted() {
+        Names names = new Names(1, "XYZ");
+
+        when(namesRepository.findById(1)).thenReturn(Optional.of(names));
+        boolean nameDeleted = namesService.isNameDeleted(names.getId());
+
+        if (nameDeleted) {
+            verify(namesRepository, times(1)).deleteById(names.getId());
+            ArgumentCaptor<Integer> integerArgumentCaptor = ArgumentCaptor.forClass(Integer.class);
+
+            verify(namesRepository).deleteById(integerArgumentCaptor.capture());
+            Integer namesIdDeleted = integerArgumentCaptor.getValue();
+
+            Assertions.assertNotNull(namesIdDeleted);
+            Assertions.assertEquals(1, namesIdDeleted);
+        }
     }
 }
