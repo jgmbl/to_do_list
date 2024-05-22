@@ -17,3 +17,4 @@ The code is tested manually using Postman and by unit tests.
 ![Coverage](https://github.com/jgmbl/to_do_list/blob/TDL-26-main-page/images/unit_tests_coverage.png)
 
 ## How to build and run
+In preparation.
