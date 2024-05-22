@@ -113,5 +113,24 @@ class TasksServiceUnitTest {
 
     @Test
     void isTaskDeleted() {
+        Names names = new Names(1, "ABC");
+        Tasks tasks = new Tasks(1, names, "XYZ");
+
+        when(tasksRepository.findById(1)).thenReturn(Optional.of(tasks));
+
+        boolean taskDeleted = tasksService.isTaskDeleted(tasks.getId());
+
+        if (taskDeleted) {
+            verify(tasksRepository, times(1)).deleteById(tasks.getId());
+            ArgumentCaptor<Integer> integerArgumentCaptor = ArgumentCaptor.forClass(Integer.class);
+
+            verify(tasksRepository).deleteById(integerArgumentCaptor.capture());
+            Integer value = integerArgumentCaptor.getValue();
+
+            assertNotNull(value);
+            assertEquals(1, value);
+        } else {
+            assertFalse(taskDeleted);
+        }
     }
 }
