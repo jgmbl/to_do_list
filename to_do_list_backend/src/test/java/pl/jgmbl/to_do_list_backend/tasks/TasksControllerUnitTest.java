@@ -16,10 +16,11 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -86,14 +87,31 @@ class TasksControllerUnitTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", Matchers.is(1)))
-                .andExpect(jsonPath("$.names.id", Matchers.is(1)))
+                .andExpect(jsonPath("$.names.id", Matchers.is(2)))
                 .andExpect(jsonPath("$.names.name", Matchers.is("XYZ")))
                 .andExpect(jsonPath("$.content", Matchers.is("ABC")))
                 .andExpect(jsonPath("$").isNotEmpty());
     }
 
     @Test
-    void patchTask() {
+    void patchTask() throws Exception {
+        Tasks taskToUpdate = taskBuilder();
+        Tasks updatedTask = taskBuilder();
+        updatedTask.setContent("TEST");
+
+        when(tasksService.updateTaskContent(taskToUpdate.getId(), updatedTask)).thenReturn(Optional.of(updatedTask));
+        mockMvc.perform(
+                        patch("/tasks/{taskId}", updatedTask.getId())
+                                .content(objectMapper.writeValueAsString(updatedTask))
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.names.id").value(2))
+                .andExpect(jsonPath("$.names.name").value("XYZ"))
+                .andExpect(jsonPath("$.content").value("TEST"));
     }
 
     @Test
@@ -108,7 +126,7 @@ class TasksControllerUnitTest {
 
     private Tasks taskBuilder() {
         Names name = Names.builder()
-                .id(1)
+                .id(2)
                 .name("XYZ")
                 .build();
 
