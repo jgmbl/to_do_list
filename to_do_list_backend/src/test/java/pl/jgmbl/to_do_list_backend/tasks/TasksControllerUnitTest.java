@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -101,7 +101,7 @@ class TasksControllerUnitTest {
 
         when(tasksService.updateTaskContent(taskToUpdate.getId(), updatedTask)).thenReturn(Optional.of(updatedTask));
         mockMvc.perform(
-                        patch("/tasks/{taskId}", updatedTask.getId())
+                        patch("/tasks/{taskId}", taskToUpdate.getId())
                                 .content(objectMapper.writeValueAsString(updatedTask))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
