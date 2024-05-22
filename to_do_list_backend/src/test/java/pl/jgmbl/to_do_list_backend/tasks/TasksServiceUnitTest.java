@@ -2,8 +2,10 @@ package pl.jgmbl.to_do_list_backend.tasks;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.jgmbl.to_do_list_backend.names.Names;
@@ -15,9 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -88,6 +89,22 @@ class TasksServiceUnitTest {
 
     @Test
     void addNewTask() {
+        Names names = new Names(1, "ABC");
+        Tasks newTask = new Tasks(1, names, "XYZ");
+
+        when(tasksRepository.save(newTask)).thenReturn(newTask);
+        Object[] taskObject = tasksService.addNewTask(newTask);
+
+        Mockito.verify(tasksRepository, times(1)).save(newTask);
+        ArgumentCaptor<Tasks> tasksArgumentCaptor = ArgumentCaptor.forClass(Tasks.class);
+        verify(tasksRepository).save(tasksArgumentCaptor.capture());
+        Tasks value = tasksArgumentCaptor.getValue();
+
+        assertNotNull(value.getId());
+        assertEquals("XYZ", value.getContent());
+        assertEquals(1, value.getId());
+        assertEquals(1, value.getNames().getId());
+        assertEquals("ABC", value.getNames().getName());
     }
 
     @Test
