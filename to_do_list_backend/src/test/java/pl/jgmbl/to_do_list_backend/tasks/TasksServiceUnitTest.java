@@ -109,6 +109,21 @@ class TasksServiceUnitTest {
 
     @Test
     void updateTaskContent() {
+        Names names = new Names(1, "ABC");
+        Tasks tasks = new Tasks(1, names, "XYZ");
+        Tasks updatedTask = new Tasks(1, names, "TEST");
+
+        when(tasksRepository.findById(1)).thenReturn(Optional.of(tasks));
+        when(tasksRepository.save(any(Tasks.class))).thenReturn(updatedTask);
+
+        Optional<Tasks> updatedTaskContent = tasksService.updateTaskContent(1, updatedTask);
+
+        assertTrue(updatedTaskContent.isPresent());
+        assertEquals(updatedTaskContent.get().getContent(), "TEST");
+        assertNotEquals(updatedTaskContent.get().getContent(), "XYZ");
+        assertEquals(updatedTaskContent.get().getId(), 1);
+        assertEquals(updatedTaskContent.get().getNames().getId(), 1);
+        assertEquals(updatedTaskContent.get().getNames().getName(), "ABC");
     }
 
     @Test
