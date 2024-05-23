@@ -39,7 +39,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function NamesDropDownMenu(props) {
+export default function NamesDropDownMenu() {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
 
@@ -55,10 +55,10 @@ export default function NamesDropDownMenu(props) {
 
   return (
     <FormControl sx={{ 
-    m: 1,
     display: 'flex',
-    justifyContent: props.sx.justifyContent,
-    width: props.sx.width
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: '25ch'
     }}>
     <InputLabel id="demo-multiple-name-label">Names</InputLabel>
     <Select
