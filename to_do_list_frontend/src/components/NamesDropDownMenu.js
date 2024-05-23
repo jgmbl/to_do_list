@@ -58,7 +58,7 @@ export default function NamesDropDownMenu() {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    width: '25ch'
+    width: '75ch'
     }}>
     <InputLabel id="demo-multiple-name-label">Names</InputLabel>
     <Select
