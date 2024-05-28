@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.config.Task;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.jgmbl.to_do_list_backend.names.Names;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -95,13 +97,14 @@ class TasksControllerUnitTest {
 
     @Test
     void patchTask() throws Exception {
-        Tasks taskToUpdate = taskBuilder();
-        Tasks updatedTask = taskBuilder();
-        updatedTask.setContent("TEST");
+        Integer taskId = 1;
+        Names name = new Names(2, "ABC");
+        Tasks taskToUpdate = new Tasks(taskId, name, "XYZ");
+        Tasks updatedTask = new Tasks(taskId, name, "TEST");
 
-        when(tasksService.updateTaskContent(taskToUpdate.getId(), updatedTask)).thenReturn(Optional.of(updatedTask));
+        when(tasksService.updateTaskContent(eq(taskId), any(Tasks.class))).thenReturn(Optional.of(updatedTask));
         mockMvc.perform(
-                        patch("/tasks/{taskId}", taskToUpdate.getId())
+                        patch("/tasks/{taskId}", taskId)
                                 .content(objectMapper.writeValueAsString(updatedTask))
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -110,7 +113,7 @@ class TasksControllerUnitTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.names.id").value(2))
-                .andExpect(jsonPath("$.names.name").value("XYZ"))
+                .andExpect(jsonPath("$.names.name").value("ABC"))
                 .andExpect(jsonPath("$.content").value("TEST"));
     }
 
