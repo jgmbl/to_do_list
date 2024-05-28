@@ -62,7 +62,6 @@ export default function NamesDropDownMenu() {
     <Select
         labelId="demo-multiple-name-label"
         id="demo-multiple-name"
-        multiple
         value={personName}
         onChange={handleChange}
         input={<OutlinedInput label="Name" />}
