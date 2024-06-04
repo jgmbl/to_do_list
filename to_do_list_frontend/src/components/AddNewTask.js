@@ -5,6 +5,23 @@ import ButtonMainMenu from './ButtonMainMenu';
 import { Container, Paper, Stack } from '@mui/material';
 
 export default function AddNewTask() {
+    const [task, setTask] = React.useState("");
+
+    const handleTaskChange = event => {
+        setTask(event.target.value);
+    }
+
+    const handleSubmit = event => {
+        event.preventDefault();
+
+        if (task.trim() === "") {
+            console.log("Task is empty");
+            return;
+        }
+
+        console.log("Task: ", task);
+    }
+
   return (
     <Container
       component="form"
@@ -20,14 +37,15 @@ export default function AddNewTask() {
         <Paper elevation={3} sx={{ p: 3 }}>
             <h1 style={{color: "#338BA8"}}>Welcome to to-do list app!</h1>
             <p style={{color: "#707070"}}>Create to-do lists and assign tasks to users.</p>
+            <p style={{color: "#707070"}}>Check the tasks in the menu in the top left corner.</p>
             <Stack spacing={2}>
-            <b style={{color: "#707070"}}>Select a name from the list...</b>
+            <b style={{color: "#707070"}}>Select name from the list...</b>
               <NamesDropDownMenu sx={{justifyContent: 'center'}}/>
               <b style={{color: "#707070"}}>...or type your name:</b>
             <TextField id="name" label="Name" variant="outlined" />
             <b style={{color: "#707070"}}>Enter the task:</b>
-            <TextField id="task" label="Task" variant="outlined" />
-            <ButtonMainMenu/>
+            <TextField id="task" label="Task" variant="outlined" value={task} onChange={handleTaskChange}/>
+            <ButtonMainMenu onClick={handleSubmit}/>
             </Stack>
       </Paper>
     </Container>
