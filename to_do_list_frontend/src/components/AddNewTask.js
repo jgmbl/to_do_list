@@ -6,11 +6,23 @@ import { Container, Paper, Stack } from '@mui/material';
 
 export default function AddNewTask() {
     const [task, setTask] = React.useState('');
+    const [name, setName] = React.useState('');
+    const [namesMenu, setNamesMenu] = React.useState('');
+    const [finalNameValue, setFinalNameValue] = React.useState('');
     const [emptyTextField, setEmptyTextField] = React.useState(false);
 
     function handleTaskChange(event) {
         setTask(event.target.value);
         setEmptyTextField(false);
+    }
+
+    function handleNameFieldChange(event) {
+        setName(event.target.value);
+        setEmptyTextField(false);
+    }
+
+    function handleNamesMenuChange(event) {
+        setNamesMenu(event.target.value);
     }
 
     function handleSubmit(event) {
@@ -19,6 +31,17 @@ export default function AddNewTask() {
         if (task.trim() === '') {
             setEmptyTextField(true);
         }
+
+        let valueName;
+        if (name.trim() === '') {
+            valueName = namesMenu;
+        } else if (namesMenu === '') {
+            valueName = name;
+        } else {
+            emptyTextField(true);
+        }
+
+        setFinalNameValue(valueName);
     }
     
   return (
@@ -40,9 +63,17 @@ export default function AddNewTask() {
             <p style={{color: "#707070"}}>Check the tasks in the menu in the top left corner.</p>
             <Stack spacing={2}>
             <b style={{color: "#707070"}}>Select name from the list...</b>
-              <NamesDropDownMenu sx={{justifyContent: 'center'}}/>
+              <NamesDropDownMenu value={namesMenu} onChange={handleNamesMenuChange} sx={{justifyContent: 'center'}}/>
               <b style={{color: "#707070"}}>...or type your name:</b>
-            <TextField id="name" label="Name" variant="outlined" />
+            <TextField
+            error={emptyTextField}
+            helperText={emptyTextField ? 'Name is required' : ''}
+            value={name}
+            onChange={handleNameFieldChange}
+            id="name"
+            label="Name"
+            variant="outlined"
+            />
             <b style={{color: "#707070"}}>Enter the task:</b>
             <TextField 
             error={emptyTextField}
@@ -51,8 +82,10 @@ export default function AddNewTask() {
             label="Task"
             variant="outlined"
             value={task}
-            onChange={handleTaskChange}/>
+            onChange={handleTaskChange}
+            />
             <ButtonMainMenu onClick={handleSubmit}/>
+            <p>Final name value: {finalNameValue}</p>
             </Stack>
       </Paper>
     </Container>
