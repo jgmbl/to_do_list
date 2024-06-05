@@ -6,15 +6,19 @@ import { Container, Paper, Stack } from '@mui/material';
 
 export default function AddNewTask() {
     const [task, setTask] = React.useState('');
+    const [emptyTextField, setEmptyTextField] = React.useState(false);
 
     function handleTaskChange(event) {
         setTask(event.target.value);
+        setEmptyTextField(false);
     }
 
     function handleSubmit(event) {
         event.preventDefault();
 
-        console.log("Task: ", task);
+        if (task.trim() === '') {
+            setEmptyTextField(true);
+        }
     }
     
   return (
@@ -41,14 +45,14 @@ export default function AddNewTask() {
             <TextField id="name" label="Name" variant="outlined" />
             <b style={{color: "#707070"}}>Enter the task:</b>
             <TextField 
-            error={task.length === 0}
-            helperText={!task.length ? 'Task is required' : ''}
+            error={emptyTextField}
+            helperText={emptyTextField ? 'Task is required' : ''}
             id="task"
             label="Task"
             variant="outlined"
             value={task}
             onChange={handleTaskChange}/>
-            <ButtonMainMenu/>
+            <ButtonMainMenu onClick={handleSubmit}/>
             </Stack>
       </Paper>
     </Container>
