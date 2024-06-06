@@ -37,6 +37,8 @@ export default function AddNewTask() {
             valueName = namesMenu;
         } else if (namesMenu === '') {
             valueName = name;
+        } else if (name.trim() !== '' && namesMenu !== '') {
+            valueName = name;
         }
 
         setFinalNameValue(valueName);
