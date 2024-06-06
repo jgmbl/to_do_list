@@ -11,7 +11,7 @@ export default function AddNewTask() {
     const [finalNameValue, setFinalNameValue] = React.useState('');
     const [emptyTextField, setEmptyTextField] = React.useState(false);
 
-    function handleTaskChange(event) {
+    function handleTaskFieldChange(event) {
         setTask(event.target.value);
         setEmptyTextField(false);
     }
@@ -21,8 +21,8 @@ export default function AddNewTask() {
         setEmptyTextField(false);
     }
 
-    function handleNamesMenuChange(event) {
-        setNamesMenu(event.target.value);
+    const handleNamesMenuChange = (value) => {
+        setNamesMenu(value);
     }
 
     function handleSubmit(event) {
@@ -37,8 +37,6 @@ export default function AddNewTask() {
             valueName = namesMenu;
         } else if (namesMenu === '') {
             valueName = name;
-        } else {
-            emptyTextField(true);
         }
 
         setFinalNameValue(valueName);
@@ -63,7 +61,7 @@ export default function AddNewTask() {
             <p style={{color: "#707070"}}>Check the tasks in the menu in the top left corner.</p>
             <Stack spacing={2}>
             <b style={{color: "#707070"}}>Select name from the list...</b>
-              <NamesDropDownMenu value={namesMenu} onChange={handleNamesMenuChange} sx={{justifyContent: 'center'}}/>
+              <NamesDropDownMenu onNameChange={handleNamesMenuChange} sx={{justifyContent: 'center'}}/>
               <b style={{color: "#707070"}}>...or type your name:</b>
             <TextField
             error={emptyTextField}
@@ -82,7 +80,7 @@ export default function AddNewTask() {
             label="Task"
             variant="outlined"
             value={task}
-            onChange={handleTaskChange}
+            onChange={handleTaskFieldChange}
             />
             <ButtonMainMenu onClick={handleSubmit}/>
             <p>Final name value: {finalNameValue}</p>

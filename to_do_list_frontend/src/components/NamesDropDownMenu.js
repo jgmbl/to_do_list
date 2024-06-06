@@ -28,7 +28,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function NamesDropDownMenu() {
+export default function NamesDropDownMenu({ onNameChange }) {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
   const [names, setNames] = React.useState([]);
@@ -47,8 +47,10 @@ export default function NamesDropDownMenu() {
     } = event;
     setPersonName(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === 'string' ? value.split(',') : value
     );
+    // prop function - value of MenuItem
+    onNameChange(value);
   };
 
   return (
