@@ -35,7 +35,7 @@ public class NamesController {
 
     @GetMapping("/names/name/{name}")
     public ResponseEntity<Names> getIdByName(@PathVariable String name) {
-        Optional<Names> idByName = namesService.getIdByName(name);
+        Optional<Names> idByName = namesService.getIdByName(name.toLowerCase());
 
         return idByName
                 .map(ResponseEntity::ok)
