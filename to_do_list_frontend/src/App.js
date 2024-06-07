@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import './App.css';
-import AddNewTask from './components/AddNewTask';
+import AddNewTask from './components/main_page/AddNewTask';
 import Appbar from './components/Appbar';
 
 class App extends Component {
