@@ -22,6 +22,10 @@ public class NamesService {
         return namesRepository.findById(id);
     }
 
+    protected Optional<Names> getIdByName(String name) {
+        return namesRepository.findByName(name);
+    }
+
     protected Object[] addNewName(Names name) {
         // save new object to database
         Names savedName = namesRepository.save(name);
