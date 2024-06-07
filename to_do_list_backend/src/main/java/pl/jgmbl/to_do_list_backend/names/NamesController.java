@@ -24,11 +24,20 @@ public class NamesController {
         return ResponseEntity.ok(allNames);
     }
 
-    @GetMapping("/names/{id}")
+    @GetMapping("/names/id/{id}")
     public ResponseEntity<Names> getNameById(@PathVariable Integer id) {
         Optional<Names> nameById = namesService.getNameById(id);
 
         return nameById
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/names/name/{name}")
+    public ResponseEntity<Names> getIdByName(@PathVariable String name) {
+        Optional<Names> idByName = namesService.getIdByName(name);
+
+        return idByName
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
