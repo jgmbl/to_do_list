@@ -23,7 +23,7 @@ public class NamesService {
     }
 
     protected Optional<Names> getIdByName(String name) {
-        return namesRepository.findByName(name);
+        return namesRepository.findByName(name.toLowerCase());
     }
 
     protected Object[] addNewName(Names name) {
