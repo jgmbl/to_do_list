@@ -52,7 +52,21 @@ class NamesControllerUnitTest {
         Names name = nameBuilder();
         when(namesService.getNameById(1)).thenReturn(Optional.ofNullable(name));
 
-        mockMvc.perform(get("/names/1"))
+        mockMvc.perform(get("/names/id/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.name", is("XYZ")))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$").isNotEmpty());
+    }
+
+    @Test
+    void getIdByName() throws Exception {
+        Names name = nameBuilder();
+        when(namesService.getIdByName("XYZ".toLowerCase())).thenReturn(Optional.ofNullable(name));
+
+        mockMvc.perform(get("/names/name/XYZ"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
