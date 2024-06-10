@@ -61,6 +61,19 @@ class NamesServiceUnitTest {
     }
 
     @Test
+    void getIdByName() {
+        Names names = new Names(1, "XYZ");
+
+        when(namesRepository.findByName("XYZ".toLowerCase())).thenReturn(Optional.of(names));
+        Optional<Names> idByName = namesService.getIdByName("XYZ".toLowerCase());
+        Names idByName1 = idByName.orElse(new Names());
+
+        Assertions.assertNotEquals(idByName, null);
+        Assertions.assertEquals(idByName1.getId(), 1);
+        Assertions.assertEquals(idByName1.getName(), "XYZ");
+    }
+
+    @Test
     void addNewName() {
         Names newName = new Names(1, "XYZ");
         Names savedName = new Names(1, "XYZ");
