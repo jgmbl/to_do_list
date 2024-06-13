@@ -26,41 +26,46 @@ export default function Homepage() {
     const handleNamesMenuChange = (value) => {
         setNamesMenu(value);
     }
+    
+    // do side effect of functional components
+    React.useEffect(() => {
+      if (task.trim() === '') {
+        setEmptyTextField(true);
+      }
+
+      let valueName;
+      if (name.trim() === '') {
+          valueName = namesMenu;
+      } else if (namesMenu === '') {
+          valueName = name;
+      } else if (name.trim() !== '' && namesMenu !== '') {
+          valueName = name;
+      }
+    
+      setFinalNameValue(valueName);
+    }, [task, name, namesMenu]); // effect's dependencies - changing in current time
 
     async function handleSubmit(event) {
-        if (task.trim() === '') {
-            setEmptyTextField(true);
-        }
+      event.preventDefault();
 
-        let valueName;
-        if (name.trim() === '') {
-            valueName = namesMenu;
-        } else if (namesMenu === '') {
-            valueName = name;
-            
-        } else if (name.trim() !== '' && namesMenu !== '') {
-            valueName = name;
-        }
-        
-        setFinalNameValue(valueName);
 
         // check if name is in database
         // if not, add it to database
         try {
           const response = await axios.get(`/names/name/${finalNameValue}`);
-          console.log(response.data);
           const isNameInDatabase = response.data.exists;
-          console.log(isNameInDatabase);
 
           if (!isNameInDatabase) {
             await addName(finalNameValue);
           }
         
         } catch (e) {
-          console.error(e);
+          if (e.response && e.response.status === 404) {
+            await addName(finalNameValue);
+          } else {
+            console.error(e);
+          }
         }
-        
-        event.preventDefault();
     }
     
   return (
