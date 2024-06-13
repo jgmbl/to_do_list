@@ -3,8 +3,10 @@ import TextField from '@mui/material/TextField';
 import NamesDropDownMenu from './NamesDropDownMenu';
 import ButtonMainMenu from './ButtonMainMenu';
 import { Container, Paper, Stack } from '@mui/material';
+import axios from 'axios';
+import { addName } from './AddNames';
 
-export default function AddNewTask() {
+export default function Homepage() {
     const [task, setTask] = React.useState('');
     const [name, setName] = React.useState('');
     const [namesMenu, setNamesMenu] = React.useState('');
@@ -25,9 +27,7 @@ export default function AddNewTask() {
         setNamesMenu(value);
     }
 
-    function handleSubmit(event) {
-        event.preventDefault();
-
+    async function handleSubmit(event) {
         if (task.trim() === '') {
             setEmptyTextField(true);
         }
@@ -37,11 +37,30 @@ export default function AddNewTask() {
             valueName = namesMenu;
         } else if (namesMenu === '') {
             valueName = name;
+            
         } else if (name.trim() !== '' && namesMenu !== '') {
             valueName = name;
         }
-
+        
         setFinalNameValue(valueName);
+
+        // check if name is in database
+        // if not, add it to database
+        try {
+          const response = await axios.get(`/names/name/${finalNameValue}`);
+          console.log(response.data);
+          const isNameInDatabase = response.data.exists;
+          console.log(isNameInDatabase);
+
+          if (!isNameInDatabase) {
+            await addName(finalNameValue);
+          }
+        
+        } catch (e) {
+          console.error(e);
+        }
+        
+        event.preventDefault();
     }
     
   return (
@@ -84,8 +103,8 @@ export default function AddNewTask() {
             value={task}
             onChange={handleTaskFieldChange}
             />
+            <p style={{color: "#707070"}}>Value: {finalNameValue}</p>
             <ButtonMainMenu onClick={handleSubmit}/>
-            <p>Final name value: {finalNameValue}</p>
             </Stack>
       </Paper>
     </Container>
