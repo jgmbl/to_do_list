@@ -4,7 +4,7 @@ export const getIdByName = async (name) => {
     try {
         const response = await axios.get(`/names/name/${name}`);
         if (response.status === 200) {
-            return response.data;
+            return response.data.id;
         } else if (response.status === 404) {
             console.error(`Name ${name} not found in database.`);
         } else {
