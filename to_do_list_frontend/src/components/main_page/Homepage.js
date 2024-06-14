@@ -5,22 +5,22 @@ import ButtonMainMenu from './ButtonMainMenu';
 import { Container, Paper, Stack } from '@mui/material';
 import axios from 'axios';
 import { addName } from './AddNames';
+import { ToastContainer } from 'react-toastify';
+import { addTask } from './AddTask';
+
 
 export default function Homepage() {
     const [task, setTask] = React.useState('');
     const [name, setName] = React.useState('');
     const [namesMenu, setNamesMenu] = React.useState('');
     const [finalNameValue, setFinalNameValue] = React.useState('');
-    const [emptyTextField, setEmptyTextField] = React.useState(false);
 
     function handleTaskFieldChange(event) {
         setTask(event.target.value);
-        setEmptyTextField(false);
     }
 
     function handleNameFieldChange(event) {
         setName(event.target.value);
-        setEmptyTextField(false);
     }
 
     const handleNamesMenuChange = (value) => {
@@ -30,7 +30,6 @@ export default function Homepage() {
     // do side effect of functional components
     React.useEffect(() => {
       if (task.trim() === '') {
-        setEmptyTextField(true);
       }
 
       let valueName;
@@ -48,10 +47,9 @@ export default function Homepage() {
     async function handleSubmit(event) {
       event.preventDefault();
 
-
-        // check if name is in database
-        // if not, add it to database
         try {
+          // check if name is in database
+          // if not, add it to database
           const response = await axios.get(`/names/name/${finalNameValue}`);
           const isNameInDatabase = response.data.exists;
 
@@ -65,6 +63,13 @@ export default function Homepage() {
           } else {
             console.error(e);
           }
+        }
+
+        // add task
+        try {
+          await addTask(finalNameValue, task);
+        } catch (e) {
+            console.log("Task cannot be added! ", e);
         }
     }
     
@@ -90,8 +95,6 @@ export default function Homepage() {
               <NamesDropDownMenu onNameChange={handleNamesMenuChange} sx={{justifyContent: 'center'}}/>
               <b style={{color: "#707070"}}>...or type your name:</b>
             <TextField
-            error={emptyTextField}
-            helperText={emptyTextField ? 'Name is required' : ''}
             value={name}
             onChange={handleNameFieldChange}
             id="name"
@@ -100,18 +103,16 @@ export default function Homepage() {
             />
             <b style={{color: "#707070"}}>Enter the task:</b>
             <TextField 
-            error={emptyTextField}
-            helperText={emptyTextField ? 'Task is required' : ''}
             id="task"
             label="Task"
             variant="outlined"
             value={task}
             onChange={handleTaskFieldChange}
             />
-            <p style={{color: "#707070"}}>Value: {finalNameValue}</p>
             <ButtonMainMenu onClick={handleSubmit}/>
             </Stack>
       </Paper>
+      <ToastContainer/>
     </Container>
   );
 }
