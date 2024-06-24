@@ -16,6 +16,7 @@ const columns = [
 
 export default function DataTable() {
   const [rows, setRows] = React.useState([]);
+  const [selectedTasks, setSelectedTasks] = React.useState([]);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +33,10 @@ export default function DataTable() {
 
     fetchData();
   }, []);
+
+  const handleDeleteTasks = () => {
+    return;
+  }
 
 
   return (
@@ -58,10 +63,14 @@ export default function DataTable() {
             }}
             pageSizeOptions={[5, 10]}
             checkboxSelection
+            onRowSelectionModelChange={(selection) => {
+              setSelectedTasks(selection);
+            }}
           />
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
           <Button 
+          onClick={handleDeleteTasks}
             variant="contained" 
             type="submit" 
             sx={{
