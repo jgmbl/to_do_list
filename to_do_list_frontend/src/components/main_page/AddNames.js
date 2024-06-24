@@ -4,9 +4,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export const addName = async (name) => {
     if (!name || typeof name !== 'string' || name.trim === '') {
-        toast.error("Select or enter a name.", {
+        toast.error("Select or enter a name", {
             position: 'top-right',
-            closeOnClick: true,
+            closeOnClick: true
         });
         return;
     }

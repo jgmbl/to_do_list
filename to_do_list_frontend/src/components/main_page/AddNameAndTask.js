@@ -71,6 +71,8 @@ export default function Homepage() {
         } catch (e) {
             console.log("Task cannot be added! ", e);
         }
+
+        window.location.reload();
     }
     
   return (
@@ -89,7 +91,6 @@ export default function Homepage() {
         <Paper elevation={3} sx={{ p: 3 }}>
             <h1 style={{color: "#338BA8"}}>Welcome to to-do list app!</h1>
             <p style={{color: "#707070"}}>Create to-do lists and assign tasks to users.</p>
-            <p style={{color: "#707070"}}>Check the tasks in the menu in the top left corner.</p>
             <Stack spacing={2}>
             <b style={{color: "#707070"}}>Select name from the list...</b>
               <NamesDropDownMenu onNameChange={handleNamesMenuChange} sx={{justifyContent: 'center'}}/>
