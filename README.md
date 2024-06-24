@@ -1,6 +1,18 @@
 # TO-DO LIST
 ## About the project
-To-do list is an app dedicated to plan tasks. User can add, change and delete task. Each task is assigned to user. The application is developed in accordance with the REST API. The user receives status codes and data in JSON format. Currently in making. Backend has been already done and tested.
+To-do list is an app dedicated to plan tasks. User can add, change and delete tasks. Each task is assigned to user. The application is developed in accordance with the REST API. The user receives status codes and data in JSON format. Frontend is created in React.
+
+## Functionalities
+Functionalities of the application include:
+ - adding task
+ - changing content of a task
+ - displaying all tasks
+ - displaying task by id
+ - deleting task
+ - adding name
+ - displaying all names
+ - displaying name by id
+ - deleting name
 
 ## Technologies
 Technologies used:
