@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import './App.css';
-import AddNewTask from './components/main_page/AddNewTask';
+import AddNameAndTask from './components/main_page/AddNameAndTask';
+import ListOfTasks from './components/main_page/ListOfTasks';
 import Appbar from './components/Appbar';
 
 class App extends Component {
@@ -8,7 +9,8 @@ class App extends Component {
         return (
             <div className="App">
                 <Appbar/>
-                <AddNewTask/>
+                <AddNameAndTask/>
+                <ListOfTasks/>
             </div>
           );
     }
