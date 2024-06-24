@@ -3,16 +3,12 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Container, Paper, Box } from '@mui/material';
 import { getListOfNamesAndTasks } from './getListOfNamesAndTasks';
 import Button from '@mui/material/Button';
+import { deleteTask } from './DeleteTask';
 
 const columns = [
   { field: 'names', headerName: 'Name', width: 150 },
   { field: 'tasks', headerName: 'Task', width: 150 },
 ];
-
-
-// const rows = [
-//   { id: getListOfNamesAndTasks.id, names: getListOfNamesAndTasks.name, tasks: getListOfNamesAndTasks.tasks},
-// ];
 
 export default function DataTable() {
   const [rows, setRows] = React.useState([]);
@@ -35,8 +31,10 @@ export default function DataTable() {
   }, []);
 
   const handleDeleteTasks = () => {
-    return;
-  }
+    selectedTasks.forEach((taskId) => {
+      deleteTask(taskId);
+    });
+  };
 
 
   return (
