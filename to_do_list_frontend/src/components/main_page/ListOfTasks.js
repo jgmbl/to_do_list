@@ -14,26 +14,31 @@ export default function DataTable() {
   const [rows, setRows] = React.useState([]);
   const [selectedTasks, setSelectedTasks] = React.useState([]);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const dataTasks = await getListOfNamesAndTasks();
+  const fetchData = async () => {
+    try {
+      const dataTasks = await getListOfNamesAndTasks();
 
-        if (dataTasks) {
-          setRows(dataTasks);
-        }
-      } catch (e) {
-        console.error("Error fetching tasks: ", e);
+      if (dataTasks) {
+        setRows(dataTasks);
       }
-    };
+    } catch (e) {
+      console.error("Error fetching tasks: ", e);
+    }
+  };
 
+  React.useEffect(() => {
     fetchData();
   }, []);
 
-  const handleDeleteTasks = () => {
-    selectedTasks.forEach((taskId) => {
-      deleteTask(taskId);
-    });
+  const handleDeleteTasks = async () => {
+    try {
+      await Promise.all(selectedTasks.map((taskId) => 
+        deleteTask(taskId)
+      ));
+      fetchData();
+    } catch (e) {
+      console.error("Error task deletion: ", e);
+    }
   };
 
 
