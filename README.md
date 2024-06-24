@@ -29,4 +29,20 @@ The code is tested manually using Postman and by unit tests.
 ![Coverage](https://github.com/jgmbl/to_do_list/blob/TDL-26-main-page/images/unit_tests_coverage.png)
 
 ## How to build and run
-In preparation.
+Open folder with *pom.xml* in terminal:
+```
+cd path-to-file/to-do-list/to_do_list_backend/
+```
+ Type:
+```
+mvn clean install
+mvn spring-boot:run
+```
+Open the following folder in another terminal:
+```
+cd path-to-file/to-do-list/to_do_list_frontend/
+```
+Type:
+```
+npm start
+```
