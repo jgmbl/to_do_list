@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Container, Paper } from '@mui/material';
+import { Container, Paper, Box } from '@mui/material';
 import { getListOfNamesAndTasks } from './getListOfNamesAndTasks';
+import Button from '@mui/material/Button';
 
 const columns = [
   { field: 'names', headerName: 'Name', width: 150 },
@@ -46,7 +47,7 @@ export default function DataTable() {
     >
       <Paper elevation={3} sx={{ p: 3 }}>
       <h2 style={{color: "#707070"}}>List of tasks: </h2>
-        <div style={{ height: 400, width: '100%' }}>
+        <Box style={{ height: 400, width: '100%'}}>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -58,7 +59,19 @@ export default function DataTable() {
             pageSizeOptions={[5, 10]}
             checkboxSelection
           />
-        </div>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
+          <Button 
+            variant="contained" 
+            type="submit" 
+            sx={{
+              backgroundColor: '#338BA8',
+              '&:hover': {
+                backgroundColor: '#296E85',
+              },
+            }}
+          >Delete tasks</Button>
+        </Box>
       </Paper>
     </Container>
   );
