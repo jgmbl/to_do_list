@@ -10,10 +10,16 @@ export const getListOfNamesAndTasks = async () => {
                 position:'top-right',
                 closeOnClick:true
             })
-            return;
+            return [];
         }
 
-        return response.data;
+        const validData = response.data.map(record => ({
+            id: record.id,
+            names: record.names.name,
+            tasks: record.content
+        }));
+
+        return validData;
     } catch (e) {
         console.error("Tasks cannot be uploaded: ", e);
     }
